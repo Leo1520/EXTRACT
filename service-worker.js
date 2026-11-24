@@ -3,7 +3,7 @@
  * Compatible con subrutas de GitHub Pages mediante rutas relativas (./)
  */
 
-const CACHE_VERSION = 'extract-shell-v0.6.0';
+const CACHE_VERSION = 'extract-shell-v1.0.1';
 const SHARED_INBOX_CACHE = 'extract-shared-inbox';
 
 const APP_SHELL_ASSETS = [
