@@ -649,8 +649,27 @@ export class UIManager {
           <span class="prop-label">Origen</span>
           <span class="prop-value">${this.escapeHtml(item.source || 'Dispositivo local')}</span>
         </div>
+        <div class="prop-row">
+          <span class="prop-label">Persistencia</span>
+          <span class="prop-value">${item.savedInLibrary ? 'Guardado en biblioteca' : 'Solo sesión actual'}</span>
+        </div>
       </div>
+      ${!item.isFolder ? `
+        <div class="sidebar-cta">
+          ${item.category === 'archive' ? `
+            <button class="btn btn-primary btn-sm btn-block" type="button" id="prop-btn-open">
+              <i data-lucide="folder-open"></i><span>Abrir contenido</span>
+            </button>
+          ` : ''}
+          <button class="btn btn-secondary btn-sm btn-block" type="button" id="prop-btn-save">
+            <i data-lucide="${item.savedInLibrary ? 'bookmark-minus' : 'bookmark-plus'}"></i>
+            <span>${item.savedInLibrary ? 'Dejar de guardar' : 'Guardar en biblioteca'}</span>
+          </button>
+        </div>
+      ` : ''}
     `;
+    this.propertiesBody.querySelector('#prop-btn-open')?.addEventListener('click', () => this.handlers.onOpenItem?.(item.id));
+    this.propertiesBody.querySelector('#prop-btn-save')?.addEventListener('click', () => this.handlers.onContextAction?.('toggle-save', item.id));
     this.refreshIcons(this.propertiesBody);
   }
 
@@ -753,6 +772,9 @@ export class UIManager {
     menu.style.left = `${Math.max(8, clampedX)}px`;
     menu.style.top = `${Math.max(8, clampedY)}px`;
 
+    const target = this.state.items.find((i) => i.id === itemId);
+    const isSaved = Boolean(target?.savedInLibrary);
+
     menu.innerHTML = `
       <button class="context-menu-item" type="button" data-ctx="open">
         <i data-lucide="folder-open"></i><span>Abrir</span>
@@ -760,12 +782,18 @@ export class UIManager {
       <button class="context-menu-item" type="button" data-ctx="properties">
         <i data-lucide="info"></i><span>Propiedades</span>
       </button>
+      ${target && !target.isFolder ? `
+        <button class="context-menu-item" type="button" data-ctx="toggle-save">
+          <i data-lucide="${isSaved ? 'bookmark-minus' : 'bookmark-plus'}"></i>
+          <span>${isSaved ? 'Dejar de guardar' : 'Guardar en biblioteca'}</span>
+        </button>
+      ` : ''}
       <button class="context-menu-item" type="button" data-ctx="favorite">
         <i data-lucide="star"></i><span>Alternar favorito</span>
       </button>
       <div class="context-menu-sep"></div>
       <button class="context-menu-item" type="button" data-ctx="remove">
-        <i data-lucide="trash-2"></i><span>Quitar de la biblioteca</span>
+        <i data-lucide="trash-2"></i><span>Quitar de la lista</span>
       </button>
     `;
 

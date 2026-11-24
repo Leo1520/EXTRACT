@@ -752,7 +752,21 @@ async function bootstrap() {
         ui.toggleProperties(true);
       } else if (action === 'favorite') {
         target.favorite = !target.favorite;
-        storageManager?.putFile(target);
+        if (target.savedInLibrary || target.isFolder) {
+          storageManager?.putFile(target);
+        }
+        ui.renderRoute(router.currentRoute);
+      } else if (action === 'toggle-save') {
+        if (!target.fileRef) return;
+        if (target.savedInLibrary) {
+          target.savedInLibrary = false;
+          storageManager?.deleteFile(target.id).then(refreshStorageEstimate);
+          ui.showToast('Eliminado del almacenamiento permanente (sigue disponible en esta sesión).', 'info');
+        } else {
+          target.savedInLibrary = true;
+          storageManager?.putFile(target).then(refreshStorageEstimate);
+          ui.showToast('Guardado en tu biblioteca local.', 'check-circle');
+        }
         ui.renderRoute(router.currentRoute);
       } else if (action === 'remove') {
         appState.items = appState.items.filter((i) => i.id !== id);
@@ -804,11 +818,10 @@ async function bootstrap() {
   installer = new InstallationManager(ui);
   updater = new UpdateManager(ui, () => appState.hasActiveTasks);
   fileManager = new FileManager(appState, ui, async (imported) => {
-    for (const item of imported || []) {
-      await storageManager?.putFile(item);
-    }
-    await refreshStorageEstimate();
     ui.renderRoute(router.currentRoute);
+    if (imported?.length === 1 && imported[0].category === 'archive') {
+      await openArchiveInExplorer(imported[0]);
+    }
   });
   shareTarget = new ShareTargetHandler(fileManager, ui);
 

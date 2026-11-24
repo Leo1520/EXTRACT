@@ -3,7 +3,7 @@
  */
 
 const DB_NAME = 'extract_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const SHARED_INBOX_CACHE = 'extract-shared-inbox';
 
 export class StorageManager {
@@ -22,6 +22,9 @@ export class StorageManager {
         const db = event.target.result;
         if (!db.objectStoreNames.contains('files')) {
           db.createObjectStore('files', { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains('blobs')) {
+          db.createObjectStore('blobs', { keyPath: 'id' });
         }
         if (!db.objectStoreNames.contains('folders')) {
           db.createObjectStore('folders', { keyPath: 'id' });
@@ -60,16 +63,41 @@ export class StorageManager {
   }
 
   async getAllFiles() {
-    return (await this.tx('files', 'readonly', (s) => s.getAll())) || [];
+    const metas = (await this.tx('files', 'readonly', (s) => s.getAll())) || [];
+    const restored = [];
+
+    for (const meta of metas) {
+      if (meta.isFolder) {
+        restored.push(meta);
+        continue;
+      }
+      const blobRow = await this.tx('blobs', 'readonly', (s) => s.get(meta.id));
+      if (blobRow && blobRow.blob) {
+        const fileRef = new File([blobRow.blob], meta.name, {
+          type: blobRow.blob.type || 'application/octet-stream',
+          lastModified: meta.updatedAt || Date.now()
+        });
+        restored.push({ ...meta, savedInLibrary: true, fileRef });
+      } else {
+        // Limpiar entradas huérfanas sin contenido real de sesiones anteriores
+        await this.tx('files', 'readwrite', (s) => s.delete(meta.id));
+      }
+    }
+
+    return restored;
   }
 
   async putFile(item) {
     const { fileRef, ...serializable } = item;
-    return this.tx('files', 'readwrite', (s) => s.put(serializable));
+    await this.tx('files', 'readwrite', (s) => s.put(serializable));
+    if (item.savedInLibrary && fileRef) {
+      await this.tx('blobs', 'readwrite', (s) => s.put({ id: item.id, blob: fileRef }));
+    }
   }
 
   async deleteFile(id) {
-    return this.tx('files', 'readwrite', (s) => s.delete(id));
+    await this.tx('files', 'readwrite', (s) => s.delete(id));
+    await this.tx('blobs', 'readwrite', (s) => s.delete(id));
   }
 
   async clearFavorites() {
