@@ -447,9 +447,32 @@ async function previewArchiveEntry(rawPath) {
 
   const textExts = new Set(['txt', 'md', 'json', 'csv', 'log', 'xml', 'yaml', 'yml', 'ini', 'css', 'ts', 'py', 'sql']);
   const imgExts = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif']);
+  const videoMimeMap = {
+    mp4: 'video/mp4',
+    m4v: 'video/mp4',
+    webm: 'video/webm',
+    mov: 'video/quicktime',
+    ogv: 'video/ogg'
+  };
+  const audioMimeMap = {
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    ogg: 'audio/ogg',
+    m4a: 'audio/mp4'
+  };
 
-  if (!textExts.has(ext) && !imgExts.has(ext)) {
-    ui.showToast('Vista previa disponible para texto plano e imágenes seguras. Usa Descargar para este formato.', 'info');
+  const isVideo = Boolean(videoMimeMap[ext]);
+  const isAudio = Boolean(audioMimeMap[ext]);
+
+  if (!textExts.has(ext) && !imgExts.has(ext) && !isVideo && !isAudio) {
+    ui.showToast('Vista previa disponible para texto plano, imágenes, video (.mp4, .webm, .mov) y audio seguros.', 'info');
+    return;
+  }
+
+  const entryMeta = active.entries?.find((e) => e.rawPath === rawPath);
+  const MAX_MEDIA_PREVIEW_BYTES = 100 * 1024 * 1024;
+  if ((isVideo || isAudio) && entryMeta && entryMeta.size > MAX_MEDIA_PREVIEW_BYTES) {
+    ui.showToast('El archivo multimedia supera los 100 MB de vista previa. Usa Descargar para reproducirlo.', 'info');
     return;
   }
 
@@ -471,7 +494,60 @@ async function previewArchiveEntry(rawPath) {
       });
       const imgEl = modal.querySelector('#safe-img-preview');
       if (imgEl) imgEl.src = url;
-      modal.querySelectorAll('[data-modal-close]').forEach((b) => b.addEventListener('click', () => URL.revokeObjectURL(url)));
+      const cleanup = () => URL.revokeObjectURL(url);
+      modal.addEventListener('click', (e) => { if (e.target === modal) cleanup(); });
+      modal.querySelectorAll('[data-modal-close]').forEach((b) => b.addEventListener('click', cleanup));
+    } else if (isVideo) {
+      const typedBlob = new Blob([entry.blob], { type: videoMimeMap[ext] });
+      const url = URL.createObjectURL(typedBlob);
+      const modal = ui.openModal({
+        title: entry.filename,
+        icon: 'film',
+        bodyHtml: `
+          <video id="safe-video-preview" controls playsinline preload="metadata" style="width:100%;max-height:62dvh;border-radius:10px;background:#05161A;"></video>
+          <p id="safe-video-error" class="setting-desc hidden">Tu navegador no pudo decodificar este códec de video. Usa Descargar para abrirlo en tu reproductor.</p>
+        `,
+        footerHtml: `<button class="btn btn-primary" type="button" data-modal-close>Cerrar</button>`
+      });
+      const videoEl = modal.querySelector('#safe-video-preview');
+      const errEl = modal.querySelector('#safe-video-error');
+      if (videoEl) {
+        videoEl.src = url;
+        videoEl.addEventListener('error', () => {
+          videoEl.classList.add('hidden');
+          errEl?.classList.remove('hidden');
+        });
+      }
+      const cleanup = () => {
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.removeAttribute('src');
+          videoEl.load();
+        }
+        URL.revokeObjectURL(url);
+      };
+      modal.addEventListener('click', (e) => { if (e.target === modal) cleanup(); });
+      modal.querySelectorAll('[data-modal-close]').forEach((b) => b.addEventListener('click', cleanup));
+    } else if (isAudio) {
+      const typedBlob = new Blob([entry.blob], { type: audioMimeMap[ext] });
+      const url = URL.createObjectURL(typedBlob);
+      const modal = ui.openModal({
+        title: entry.filename,
+        icon: 'music',
+        bodyHtml: `<audio id="safe-audio-preview" controls preload="metadata" style="width:100%;"></audio>`,
+        footerHtml: `<button class="btn btn-primary" type="button" data-modal-close>Cerrar</button>`
+      });
+      const audioEl = modal.querySelector('#safe-audio-preview');
+      if (audioEl) audioEl.src = url;
+      const cleanup = () => {
+        if (audioEl) {
+          audioEl.pause();
+          audioEl.removeAttribute('src');
+        }
+        URL.revokeObjectURL(url);
+      };
+      modal.addEventListener('click', (e) => { if (e.target === modal) cleanup(); });
+      modal.querySelectorAll('[data-modal-close]').forEach((b) => b.addEventListener('click', cleanup));
     } else {
       const slice = entry.blob.slice(0, 128 * 1024);
       const text = await slice.text();

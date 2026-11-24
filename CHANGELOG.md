@@ -2,6 +2,7 @@
 
 ## [1.0.0] - Fase 8: Preparación para GitHub Pages y Documentación Final
 ### Agregado
+- Vista previa segura ampliada a video (`.mp4`, `.m4v`, `.webm`, `.mov`, `.ogv`) y audio (`.mp3`, `.wav`, `.ogg`, `.m4a`) mediante `Blob` tipado y liberación automática de `ObjectURL` (límite preventivo de 100 MB).
 - Archivo `.nojekyll` en la raíz para compatibilidad directa con GitHub Pages.
 - Documentación completa: `README.md`, `INSTALLATION.md`, `COMPATIBILITY.md` y `SECURITY.md`.
 - Auditoría final de rutas relativas (`./`), manifiesto PWA y recursos de precaché del Service Worker.
