@@ -1,0 +1,70 @@
+{
+  "name": "EXTRACT — Gestor y extractor de archivos",
+  "short_name": "EXTRACT",
+  "description": "Aplicación web progresiva gratuita y local para explorar, extraer y comprimir archivos ZIP, RAR, 7Z, TAR y más directamente en tu dispositivo.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "es",
+  "background_color": "#05161A",
+  "theme_color": "#05161A",
+  "categories": ["utilities", "productivity"],
+  "share_target": {
+    "action": "./share-receiver",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": [
+            "application/zip",
+            "application/x-zip-compressed",
+            "application/vnd.rar",
+            "application/x-rar-compressed",
+            "application/x-7z-compressed",
+            "application/x-tar",
+            "application/gzip",
+            "application/x-gzip",
+            "application/x-bzip2",
+            "application/x-xz",
+            "application/octet-stream",
+            ".zip",
+            ".rar",
+            ".7z",
+            ".tar",
+            ".gz",
+            ".tgz",
+            ".bz2",
+            ".xz",
+            "*/*"
+          ]
+        }
+      ]
+    }
+  },
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

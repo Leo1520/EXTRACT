@@ -1,0 +1,98 @@
+/* ==========================================================================
+   EXTRACT - Variables de diseño e identidad visual oficial
+   Paleta exclusiva:
+   - #05161A: Fondo principal
+   - #072E33: Superficies y paneles
+   - #0C7075: Elementos secundarios
+   - #0F969C: Acciones principales y elementos activos
+   - #6DA5C0: Detalles, iconos y elementos complementarios
+   - #294D61: Superficies secundarias
+   ========================================================================== */
+
+:root {
+  /* Paleta oficial */
+  --color-bg-main: #05161A;
+  --color-bg-surface: #072E33;
+  --color-bg-secondary: #294D61;
+  --color-accent-secondary: #0C7075;
+  --color-accent-primary: #0F969C;
+  --color-detail: #6DA5C0;
+
+  /* Variaciones tonales y transparencias derivadas estrictamente de la paleta */
+  --color-bg-elevated: #0A383E;
+  --color-bg-hover: rgba(12, 112, 117, 0.22);
+  --color-bg-active: rgba(15, 150, 156, 0.28);
+  --color-bg-glass: rgba(7, 46, 51, 0.92);
+  --color-backdrop: rgba(5, 22, 26, 0.78);
+
+  /* Bordes */
+  --color-border-subtle: rgba(109, 165, 192, 0.14);
+  --color-border-default: rgba(109, 165, 192, 0.24);
+  --color-border-strong: rgba(15, 150, 156, 0.55);
+
+  /* Tipografía de alto contraste sobre #05161A y #072E33 */
+  --color-text-primary: #E8F4F6;
+  --color-text-secondary: #6DA5C0;
+  --color-text-muted: rgba(109, 165, 192, 0.72);
+  --color-text-on-accent: #05161A;
+
+  /* Estados funcionales integrados en la paleta */
+  --color-status-ok: #0F969C;
+  --color-status-info: #6DA5C0;
+  --color-status-warn: #6DA5C0;
+  --color-status-danger: #294D61;
+
+  /* Tipografía */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Escala tipográfica */
+  --text-xs: 0.75rem;
+  --text-sm: 0.84rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+
+  /* Espaciado */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Radios */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+
+  /* Sombras discretas */
+  --shadow-sm: 0 2px 8px rgba(5, 22, 26, 0.35);
+  --shadow-md: 0 8px 24px rgba(5, 22, 26, 0.5);
+  --shadow-lg: 0 16px 40px rgba(5, 22, 26, 0.65);
+
+  /* Dimensiones de layout */
+  --sidebar-width: 256px;
+  --sidebar-compact: 76px;
+  --topbar-height: 60px;
+  --properties-width: 300px;
+  --bottom-nav-height: 64px;
+
+  /* Transiciones */
+  --transition-fast: 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-normal: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Capas Z */
+  --z-base: 1;
+  --z-sticky: 20;
+  --z-sidebar: 40;
+  --z-bottom-nav: 45;
+  --z-fab: 50;
+  --z-dropdown: 70;
+  --z-modal: 90;
+  --z-toast: 110;
+}

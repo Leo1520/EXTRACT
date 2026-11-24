@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05161A" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="EXTRACT — Aplicación web progresiva gratuita y local para explorar, extraer y comprimir archivos ZIP, RAR, 7Z, TAR y más directamente en tu dispositivo." />
+  <title>EXTRACT — Gestor y extractor de archivos comprimidos</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+
+  <link rel="stylesheet" href="./css/variables.css" />
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/library.css" />
+  <link rel="stylesheet" href="./css/explorer.css" />
+  <link rel="stylesheet" href="./css/dialogs.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell">
+    <!-- Barra lateral de navegación -->
+    <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+      <div class="sidebar-brand">
+        <div class="brand-identity">
+          <div class="brand-mark" aria-hidden="true">
+            <i data-lucide="archive"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">EXTRACT</span>
+            <span class="brand-tag">Procesamiento local</span>
+          </div>
+        </div>
+        <button class="icon-btn mobile-menu-btn" id="btn-close-sidebar" type="button" aria-label="Cerrar menú">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-cta">
+        <button class="btn btn-primary btn-block" id="btn-import-sidebar" type="button">
+          <i data-lucide="file-plus"></i>
+          <span>Importar archivos</span>
+        </button>
+        <button class="btn btn-secondary btn-block" id="btn-new-zip-sidebar" type="button">
+          <i data-lucide="folder-archive"></i>
+          <span>Crear ZIP</span>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <span class="nav-group-label">Principal</span>
+        <button class="nav-item active" data-route="inicio" type="button">
+          <i data-lucide="home"></i>
+          <span>Inicio</span>
+        </button>
+        <button class="nav-item" data-route="biblioteca" type="button">
+          <i data-lucide="library"></i>
+          <span>Mi biblioteca</span>
+        </button>
+        <button class="nav-item" data-route="todos" type="button">
+          <i data-lucide="files"></i>
+          <span>Todos los archivos</span>
+        </button>
+        <button class="nav-item" data-route="comprimidos" type="button">
+          <i data-lucide="file-archive"></i>
+          <span>Comprimidos</span>
+        </button>
+        <button class="nav-item" data-route="carpetas" type="button">
+          <i data-lucide="folder"></i>
+          <span>Carpetas</span>
+        </button>
+
+        <span class="nav-group-label">Organización</span>
+        <button class="nav-item" data-route="recientes" type="button">
+          <i data-lucide="clock"></i>
+          <span>Recientes</span>
+        </button>
+        <button class="nav-item" data-route="favoritos" type="button">
+          <i data-lucide="star"></i>
+          <span>Favoritos</span>
+        </button>
+        <button class="nav-item" data-route="extraidos" type="button">
+          <i data-lucide="package-open"></i>
+          <span>Extraídos</span>
+        </button>
+
+        <span class="nav-group-label">Sistema</span>
+        <button class="nav-item" data-route="actividad" type="button">
+          <i data-lucide="activity"></i>
+          <span>Actividad</span>
+          <span class="nav-badge hidden" id="activity-badge">0</span>
+        </button>
+        <button class="nav-item" data-route="configuracion" type="button">
+          <i data-lucide="settings"></i>
+          <span>Configuración</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="storage-mini">
+          <div class="storage-mini-head">
+            <span>Espacio local</span>
+            <span id="sidebar-storage-label">0 MB</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="sidebar-storage-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Barra superior -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-menu-btn" id="btn-open-sidebar" type="button" aria-label="Abrir menú">
+          <i data-lucide="menu"></i>
+        </button>
+        <h1 class="topbar-title" id="topbar-title">Inicio</h1>
+      </div>
+
+      <div class="topbar-search">
+        <div class="input-group">
+          <span class="input-icon"><i data-lucide="search"></i></span>
+          <input
+            type="search"
+            id="global-search"
+            class="input-control"
+            placeholder="Buscar archivos o carpetas (Ctrl + K)"
+            aria-label="Buscar archivos o carpetas"
+          />
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="btn-mobile-search" type="button" aria-label="Buscar">
+          <i data-lucide="search"></i>
+        </button>
+        <button class="icon-btn" id="btn-toggle-properties" type="button" aria-label="Panel de propiedades" title="Propiedades (Alt + P)">
+          <i data-lucide="panel-right"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Área de trabajo principal -->
+    <main class="main-workspace" id="main-workspace" tabindex="-1">
+      <!-- Renderizado dinámico por UIManager -->
+    </main>
+
+    <!-- Panel lateral derecho de propiedades -->
+    <aside class="properties-panel collapsed" id="properties-panel" aria-label="Propiedades del archivo">
+      <div class="properties-header">
+        <span class="block-title">Propiedades</span>
+        <button class="icon-btn" id="btn-close-properties" type="button" aria-label="Cerrar propiedades">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="properties-body" id="properties-body">
+        <div class="empty-state" style="min-height: 180px; padding: 1.25rem;">
+          <div class="empty-state-icon"><i data-lucide="info"></i></div>
+          <p class="empty-state-desc">Selecciona un archivo o carpeta para ver sus detalles.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Navegación inferior móvil -->
+  <nav class="bottom-nav" id="bottom-nav" aria-label="Navegación móvil">
+    <button class="bottom-nav-btn active" data-route="inicio" type="button">
+      <i data-lucide="home"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="bottom-nav-btn" data-route="biblioteca" type="button">
+      <i data-lucide="library"></i>
+      <span>Biblioteca</span>
+    </button>
+    <button class="bottom-nav-btn" data-route="actividad" type="button">
+      <i data-lucide="activity"></i>
+      <span>Actividad</span>
+    </button>
+    <button class="bottom-nav-btn" data-route="configuracion" type="button">
+      <i data-lucide="settings"></i>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <!-- Botón flotante móvil de importación -->
+  <button class="mobile-fab" id="btn-mobile-fab" type="button" aria-label="Importar archivos">
+    <i data-lucide="plus"></i>
+    <span>Importar</span>
+  </button>
+
+  <!-- Overlay de Drag & Drop -->
+  <div class="drop-overlay hidden" id="drop-overlay" aria-hidden="true">
+    <div class="drop-overlay-icon">
+      <i data-lucide="upload-cloud"></i>
+    </div>
+    <h2 class="empty-state-title">Suelta tus archivos aquí</h2>
+    <p class="empty-state-desc">Procesamiento 100 % local en tu dispositivo.</p>
+  </div>
+
+  <!-- Contenedores globales de diálogos, menú contextual y toasts -->
+  <div id="modal-root"></div>
+  <div id="context-menu-root"></div>
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Inputs ocultos para importación -->
+  <input type="file" id="input-file-picker" class="hidden" multiple />
+  <input type="file" id="input-folder-picker" class="hidden" webkitdirectory directory multiple />
+
+  <script src="./lib/lucide/lucide.min.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

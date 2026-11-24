@@ -1,0 +1,304 @@
+/* ==========================================================================
+   EXTRACT - Estructura principal (Shell nativo multidispositivo)
+   ========================================================================== */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr auto;
+  grid-template-rows: var(--topbar-height) 1fr;
+  grid-template-areas:
+    "sidebar topbar properties"
+    "sidebar main properties";
+  height: 100dvh;
+  width: 100vw;
+  background-color: var(--color-bg-main);
+  overflow: hidden;
+}
+
+/* Sidebar (Escritorio y Tablet) */
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--color-bg-surface);
+  border-right: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-3);
+  gap: var(--space-4);
+  z-index: var(--z-sidebar);
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-1) var(--space-2);
+  gap: var(--space-3);
+}
+
+.brand-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-on-accent);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.brand-mark svg.lucide {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.brand-tag {
+  font-size: 0.7rem;
+  color: var(--color-detail);
+  letter-spacing: 0.02em;
+}
+
+.sidebar-cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.nav-group-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.58rem var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-detail);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  width: 100%;
+  text-align: left;
+  min-height: 40px;
+}
+
+.nav-item:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.nav-item.active {
+  background-color: var(--color-bg-active);
+  color: var(--color-text-primary);
+  box-shadow: inset 3px 0 0 var(--color-accent-primary);
+}
+
+.nav-item.active svg.lucide {
+  color: var(--color-accent-primary);
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.storage-mini {
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.storage-mini-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--color-detail);
+}
+
+/* Topbar */
+.topbar {
+  grid-area: topbar;
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-5);
+  gap: var(--space-3);
+  z-index: var(--z-sticky);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.topbar-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-search {
+  flex: 1;
+  max-width: 440px;
+  position: relative;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Área de trabajo principal */
+.main-workspace {
+  grid-area: main;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  background-color: var(--color-bg-main);
+}
+
+/* Overlay para Drag & Drop */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 22, 26, 0.88);
+  border: 2px dashed var(--color-accent-primary);
+  margin: var(--space-4);
+  border-radius: var(--radius-xl);
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  pointer-events: none;
+}
+
+.drop-overlay-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-accent-primary);
+  display: grid;
+  place-items: center;
+  color: var(--color-accent-primary);
+}
+
+.drop-overlay-icon svg.lucide {
+  width: 30px;
+  height: 30px;
+}
+
+/* Panel derecho de propiedades */
+.properties-panel {
+  grid-area: properties;
+  width: var(--properties-width);
+  background-color: var(--color-bg-surface);
+  border-left: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width var(--transition-normal), opacity var(--transition-normal);
+}
+
+.properties-panel.collapsed {
+  width: 0;
+  border-left: none;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.properties-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  min-height: var(--topbar-height);
+}
+
+.properties-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Barra de navegación inferior (solo móvil) */
+.bottom-nav {
+  display: none;
+}
+
+.mobile-fab {
+  display: none;
+}
+
+/* Botón menú hamburguesa tablet/móvil */
+.mobile-menu-btn {
+  display: none;
+}

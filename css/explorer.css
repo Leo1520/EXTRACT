@@ -1,0 +1,131 @@
+/* ==========================================================================
+   EXTRACT - Explorador interno de archivos comprimidos y Breadcrumbs
+   ========================================================================== */
+
+.explorer-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.explorer-header {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.explorer-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.explorer-archive-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.explorer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-detail);
+}
+
+.breadcrumb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-detail);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.breadcrumb-btn:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.breadcrumb-btn.current {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.breadcrumb-sep {
+  color: var(--color-text-muted);
+  display: flex;
+}
+
+/* Panel de propiedades */
+.prop-preview-box {
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+}
+
+.prop-preview-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
+  color: var(--color-accent-primary);
+  display: grid;
+  place-items: center;
+}
+
+.prop-preview-icon svg.lucide {
+  width: 28px;
+  height: 28px;
+}
+
+.prop-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-2);
+}
+
+.prop-label {
+  color: var(--color-detail);
+}
+
+.prop-value {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
