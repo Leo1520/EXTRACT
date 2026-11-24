@@ -220,7 +220,34 @@ function promptPassword(archiveName) {
 
 async function openArchiveInExplorer(item, password = '') {
   if (!item?.fileRef) {
-    ui.showToast('El archivo ya no está disponible en memoria.', 'alert-circle');
+    const modal = ui.openModal({
+      title: 'Archivo no cargado en esta sesión',
+      icon: 'file-archive',
+      bodyHtml: `
+        <p class="setting-desc">
+          Por privacidad y ahorro de espacio, EXTRACT conserva en la biblioteca solo los metadatos de <strong>${ui.escapeHtml(item?.name || 'este archivo')}</strong> tras recargar la página.
+        </p>
+        <p class="setting-desc">Selecciónalo nuevamente desde tu dispositivo para abrirlo en el explorador.</p>
+        <input type="file" id="reattach-file-input" class="hidden" />
+      `,
+      footerHtml: `
+        <button class="btn btn-ghost" type="button" data-modal-close>Cerrar</button>
+        <button class="btn btn-primary" type="button" id="btn-reattach-file">Seleccionar archivo</button>
+      `
+    });
+
+    const input = modal.querySelector('#reattach-file-input');
+    modal.querySelector('#btn-reattach-file')?.addEventListener('click', () => input?.click());
+    input?.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      item.fileRef = f;
+      item.size = f.size || item.size;
+      item.updatedAt = f.lastModified || Date.now();
+      await storageManager?.putFile(item);
+      ui.closeModal();
+      await openArchiveInExplorer(item, password);
+    });
     return;
   }
 
